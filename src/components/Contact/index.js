@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { validateEmail, validEmail } from "../../utils/helpers";
+import { validateEmail } from "../../utils/helpers";
 
 function ContactForm() {
    // set ititial state to empty strings

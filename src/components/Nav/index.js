@@ -5,15 +5,10 @@ function Nav(props) {
    const {
       categories = [],
       setCurrentCategory,
-      currentCategory,
       contactSelected,
+      currentCategory,
       setContactSelected,
    } = props;
-
-   const handleClick = (item) => {
-      console.log(item);
-      return item;
-   };
 
    return (
       <header className="flex-row px-1">
