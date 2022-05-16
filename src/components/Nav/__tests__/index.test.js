@@ -1,6 +1,6 @@
-// import Nav Component
+// __tests__/Nav.test.js with hard coded categories
 import React from "react";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import Nav from "..";
 
@@ -9,56 +9,55 @@ const categories = [
 ];
 const mockCurrentCategory = jest.fn();
 const mockSetCurrentCategory = jest.fn();
+const mockContactSelected = jest.fn();
+const mockSetContactSelected = jest.fn();
 
-// Configure Testing Environment
-// cleanup statement
 afterEach(cleanup);
 
-// describe function to declare what this test suite will be testing
 describe("Nav component", () => {
-   // baseline test
    it("renders", () => {
       render(
          <Nav
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
          />
       );
    });
 
-   // snapshot test
    it("matches snapshot DOM node structure", () => {
       const { asFragment } = render(
          <Nav
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
          />
       );
 
-      //    assert value comparison - snapshot assertion
       expect(asFragment()).toMatchSnapshot();
    });
 });
 
-// test the camera emoji visibility
 describe("emoji is visible", () => {
-   it("insert emoji into the h2", () => {
-      // Arrange
+   it("inserts emoji into the h2", () => {
       const { getByLabelText } = render(
          <Nav
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
          />
       );
-      // Assert
+
       expect(getByLabelText("camera")).toHaveTextContent("📸");
    });
 });
 
-// test if links are visible
 describe("links are visible", () => {
    it("inserts text into the home link", () => {
       const { getByTestId } = render(
@@ -66,12 +65,31 @@ describe("links are visible", () => {
             categories={categories}
             setCurrentCategory={mockSetCurrentCategory}
             currentCategory={mockCurrentCategory}
-            // contactSelected={mockContactSelected}
-            // setContactSelected={mockSetContactSelected}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
          />
       );
 
       expect(getByTestId("link")).toHaveTextContent("Oh Snap!");
       expect(getByTestId("about")).toHaveTextContent("About me");
+   });
+});
+
+describe("onClick events", () => {
+   it("calls the click handler when clicked", () => {
+      const { getByText } = render(
+         <Nav
+            categories={categories}
+            setCurrentCategory={mockSetCurrentCategory}
+            currentCategory={mockCurrentCategory}
+            contactSelected={mockContactSelected}
+            setContactSelected={mockSetContactSelected}
+         />
+      );
+      fireEvent.click(getByText("About me"));
+      fireEvent.click(getByText("Contact"));
+      fireEvent.click(getByText("Portraits"));
+
+      expect(mockSetContactSelected).toHaveBeenCalledTimes(3);
    });
 });
